@@ -1,0 +1,54 @@
+{
+  "version": "1.0.0",
+  "product": "Os Draconis Multimodal Quality Grader",
+  "weights": {
+    "fire": 0.18,
+    "fluo": 0.18,
+    "image": 0.22,
+    "xrf": 0.22,
+    "gcms": 0.2
+  },
+  "thresholds": {
+    "premium": 0.85,
+    "grade_i": 0.8,
+    "grade_ii": 0.7
+  },
+  "image": {
+    "lab_mean_L": {
+      "mean": 174.5139171055385,
+      "std": 17.47686192308298
+    },
+    "lab_mean_b_centered": {
+      "mean": 8.86130142211914,
+      "std": 7.042841389803851
+    },
+    "lbp_entropy": {
+      "mean": 3.163624394838951,
+      "std": 0.0723098579709251
+    }
+  },
+  "xrf": {
+    "Ca": {
+      "mean": 71.16714285714285,
+      "std": 3.994069413041097
+    },
+    "CaP_mol": {
+      "mean": 3.0308357537674437,
+      "std": 0.7658601820790358
+    },
+    "SiAl": {
+      "mean": 5.274285714285713,
+      "std": 5.265604926131017
+    }
+  },
+  "gcms": {
+    "log10_tic": {
+      "mean": 9.659938635717785,
+      "std": 0.07783682317732198
+    },
+    "n_peaks_filt": {
+      "mean": 90.0,
+      "std": 1.0
+    }
+  }
+}

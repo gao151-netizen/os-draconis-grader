@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Os Draconis Multimodal Quality Grader</title>
+  <link rel="stylesheet" href="css/app.css" />
+</head>
+<body>
+  <header class="hero">
+    <div class="hero-inner">
+      <h1>Os Draconis Multimodal Quality Grader</h1>
+      <p>
+        Grade Longgu (Os Draconis) by combining traditional experience assays
+        with micro-XRF / XRD mineralogy and GC-MS chemistry. Upload a photograph,
+        enter assay results, or load instrument files to obtain Premium, Grade I,
+        Grade II, or Counterfeit/Inferior classification.
+      </p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <div class="grid">
+      <section class="card">
+        <div class="card-hd">
+          <h2>Sample inputs</h2>
+          <span class="hint">Empty fields turn red on submit; grading can still continue</span>
+        </div>
+        <div class="card-bd">
+          <div class="field">
+            <label for="sampleId">Sample ID</label>
+            <input id="sampleId" type="text" placeholder="e.g. LG-2025-01" />
+          </div>
+
+          <div class="panel" id="panelImage">
+            <div class="panel-hd">
+              <h3>1. Photograph</h3>
+              <span class="chip">JPG / PNG / WEBP / BMP · ≤15 MB</span>
+            </div>
+            <div class="panel-bd">
+              <label class="upload" for="imgInput">
+                <strong>Upload Longgu image</strong>
+                <span>Extracts CIE Lab colour and LBP texture features</span>
+                <input id="imgInput" type="file" accept=".jpg,.jpeg,.png,.webp,.bmp,image/jpeg,image/png,image/webp,image/bmp" />
+              </label>
+              <div id="imgFileChip" class="file-chip hidden"></div>
+              <div id="imgPreview" class="preview">
+                <img id="imgThumb" alt="Upload preview" />
+                <div id="maskPreview"></div>
+                <div id="imgMeta" class="help"></div>
+              </div>
+              <div class="field-msg" id="msgImage">Please upload a photograph.</div>
+            </div>
+          </div>
+
+          <div class="panel" id="panelFire">
+            <div class="panel-hd"><h3>2. Fire assay</h3></div>
+            <div class="panel-bd">
+              <div class="choice-list">
+                <label class="choice"><input type="radio" name="fire" value="pass" /> Pass — no charring or offensive odour</label>
+                <label class="choice"><input type="radio" name="fire" value="fail" /> Fail — charred and/or offensive odour</label>
+              </div>
+              <div class="help">A failed fire assay assigns Counterfeit/Inferior immediately.</div>
+              <div class="field-msg" id="msgFire">Please select a fire assay result.</div>
+            </div>
+          </div>
+
+          <div class="panel" id="panelFluo">
+            <div class="panel-hd"><h3>3. Fluorescence assay</h3></div>
+            <div class="panel-bd">
+              <div class="choice-list">
+                <label class="choice"><input type="radio" name="fluo" value="pos" /> Positive</label>
+                <label class="choice"><input type="radio" name="fluo" value="neg" /> Negative</label>
+              </div>
+              <div class="field-msg" id="msgFluo">Please select a fluorescence result.</div>
+            </div>
+          </div>
+
+          <div class="panel" id="panelXrf">
+            <div class="panel-hd">
+              <h3>4. Micro-XRF / XRD</h3>
+              <span class="chip">CSV / TXT / XLSX · ≤5 MB</span>
+            </div>
+            <div class="panel-bd">
+              <p class="panel-note">Provide either an uploaded table <em>or</em> both Ca and P values (wt%).</p>
+              <label class="upload" for="xrfInput">
+                <strong>Upload mineralogy table</strong>
+                <span>
+                  Columns: Ca, P (required in file); Si, Al optional ·
+                  <a href="data/templates/xrf_template.csv">CSV</a> ·
+                  <a href="data/templates/xrf_template.xlsx">XLSX</a>
+                </span>
+                <input id="xrfInput" type="file" accept=".csv,.txt,.xlsx,.xls,text/csv,text/plain,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" />
+              </label>
+              <div id="xrfFileChip" class="file-chip hidden"></div>
+              <div class="or-divider">or enter values</div>
+              <div class="row">
+                <div class="field">
+                  <label for="xrfCa">Ca (wt%)</label>
+                  <input id="xrfCa" type="number" step="any" placeholder="e.g. 73.25" />
+                </div>
+                <div class="field">
+                  <label for="xrfP">P (wt%)</label>
+                  <input id="xrfP" type="number" step="any" placeholder="e.g. 20.70" />
+                </div>
+                <div class="field">
+                  <label for="xrfSi">Si (wt%)</label>
+                  <input id="xrfSi" type="number" step="any" placeholder="optional" />
+                </div>
+                <div class="field">
+                  <label for="xrfAl">Al (wt%)</label>
+                  <input id="xrfAl" type="number" step="any" placeholder="optional" />
+                </div>
+              </div>
+              <div class="field-msg" id="msgXrf">Please upload an XRF/XRD file, or enter both Ca and P.</div>
+            </div>
+          </div>
+
+          <div class="panel" id="panelGcms">
+            <div class="panel-hd">
+              <h3>5. GC-MS</h3>
+              <span class="chip">CSV / TSV / TXT / XLSX · ≤8 MB</span>
+            </div>
+            <div class="panel-bd">
+              <p class="panel-note">Provide either an uploaded file <em>or</em> summary values.</p>
+              <label class="upload" for="gcmsInput">
+                <strong>Upload GC-MS file</strong>
+                <span>
+                  Summary: <a href="data/templates/gcms_summary_template.csv">CSV</a> /
+                  <a href="data/templates/gcms_summary_template.xlsx">XLSX</a>
+                  · Peaks: <a href="data/templates/gcms_peak_template.csv">CSV</a> /
+                  <a href="data/templates/gcms_peak_template.xlsx">XLSX</a>
+                </span>
+                <input id="gcmsInput" type="file" accept=".csv,.tsv,.txt,.xlsx,.xls,text/csv,text/plain,text/tab-separated-values,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel" />
+              </label>
+              <div id="gcmsFileChip" class="file-chip hidden"></div>
+              <div class="or-divider">or enter values</div>
+              <div class="row">
+                <div class="field">
+                  <label for="gcmsLogTic">log<sub>10</sub>(TIC)</label>
+                  <input id="gcmsLogTic" type="number" step="any" placeholder="e.g. 9.75" />
+                </div>
+                <div class="field">
+                  <label for="gcmsNPeaks">Filtered peak count</label>
+                  <input id="gcmsNPeaks" type="number" step="1" placeholder="e.g. 90" />
+                </div>
+              </div>
+              <div class="field-msg" id="msgGcms">Please upload a GC-MS file or enter log10(TIC) / peak count.</div>
+            </div>
+          </div>
+
+          <div class="btn-row">
+            <button type="button" class="btn-primary" id="btnGrade">Run quality grade</button>
+            <button type="button" class="btn-ghost" id="btnReset">Reset</button>
+          </div>
+        </div>
+      </section>
+
+      <aside class="card result-panel">
+        <div class="card-hd">
+          <h2>Quality grade</h2>
+          <span class="hint">Fusion 0–100</span>
+        </div>
+        <div class="card-bd">
+          <div id="resultEmpty" class="help">
+            Complete the input panels and click <strong>Run quality grade</strong>.
+            Missing fields will be marked in red; you may still continue.
+          </div>
+          <div id="resultBody" class="hidden">
+            <div id="gradeBanner" class="grade-banner">
+              <div class="kicker">Assigned class</div>
+              <div class="grade" id="gradeLabel">—</div>
+              <div class="score" id="fusionScore">—</div>
+              <div class="help" style="color:rgba(255,255,255,0.88);margin-top:6px" id="gradeReason"></div>
+            </div>
+            <div class="meter"><span id="meterFill"></span></div>
+
+            <h3 class="result-sub">Why this grade</h3>
+            <p id="gradeComment" class="comment"></p>
+            <ul id="gradeBullets" class="comment-list"></ul>
+
+            <h3 class="result-sub">Modality scores</h3>
+            <ul class="score-list" id="moduleScores"></ul>
+
+            <div class="btn-row" style="margin-top:14px">
+              <button type="button" class="btn-primary" id="btnExportPdf">Export certificate (PDF)</button>
+            </div>
+
+            <div class="legend">
+              <div><b style="color:var(--premium)">Premium</b>≥ 85</div>
+              <div><b style="color:var(--grade1)">Grade I</b>80 – 85</div>
+              <div><b style="color:var(--grade2)">Grade II</b>70 – 80</div>
+              <div><b style="color:var(--inferior)">Counterfeit/Inferior</b>&lt; 70 or fire fail</div>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer class="footer">
+    Os Draconis Multimodal Quality Grader · fire 0.18 · fluorescence 0.18 ·
+    image 0.22 · micro-XRF/XRD 0.22 · GC-MS 0.20
+  </footer>
+
+  <div id="warnModal" class="modal-backdrop" role="dialog" aria-modal="true">
+    <div class="modal">
+      <div class="modal-hd">Incomplete input</div>
+      <div class="modal-bd">
+        <p>Some recommended fields are empty (highlighted in red). You can continue, but the grade may be less accurate.</p>
+        <ul id="warnList"></ul>
+      </div>
+      <div class="modal-ft">
+        <button type="button" class="btn-ghost" id="warnCancel">Go back</button>
+        <button type="button" class="btn-primary" id="warnContinue">Continue grading</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
+  <script src="js/vendor/jspdf.umd.min.js"></script>
+  <script src="js/score.js"></script>
+  <script src="js/image.js"></script>
+  <script src="js/certificate.js"></script>
+  <script src="data/model_params.embed.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

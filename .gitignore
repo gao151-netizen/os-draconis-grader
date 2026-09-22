@@ -1,0 +1,10 @@
+# Local rebuild helpers (absolute lab paths; not needed to run the app)
+_build_data.py
+_make_templates.py
+_validate_grades.py
+__pycache__/
+*.pyc
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
